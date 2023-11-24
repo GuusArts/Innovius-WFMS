@@ -1,32 +1,31 @@
 package com.system.wfms.api;
 
 
-import com.system.wfms.Sensors;
-import com.system.wfms.TemperatureSensor;
-import org.springframework.batch.core.*;
-import org.springframework.batch.core.launch.JobLauncher;
-import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
-import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
-import org.springframework.batch.core.repository.JobRestartException;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.system.wfms.Models.TemperatureData;
+import com.system.wfms.service.TemperatureSensorService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import javax.validation.Valid;
 
-import java.io.IOException;
-import java.util.List;
 
 @RestController
 @CrossOrigin (origins= {"http://localhost:8080","http://localhost:5000"})
-@RequestMapping("/Control")
+@RequestMapping("/Monitor")
 public class KettleController {
 
+    private final TemperatureSensorService temperatureSensorService;
 
+    @GetMapping("/Temp")
+    public ResponseEntity<TemperatureData> SendTemp() throws Exception {
+        if(!temperatureSensorService.RetrieveTempData().getTemp().isNaN()){
+            System.out.println("Page called");
+            return ResponseEntity.ok().body(temperatureSensorService.RetrieveTempData());
 
-    @PostMapping("/Temp")
-    public void GetTempView(@RequestBody @Valid TemperatureSensor TempSensor) {
-        System.out.println(TempSensor);
+        }
+        return ResponseEntity.badRequest().build();
     }
 
+    public KettleController(TemperatureSensorService temperatureSensorService) {
+        this.temperatureSensorService = temperatureSensorService;
+
+    }
 }
