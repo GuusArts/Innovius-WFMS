@@ -11,12 +11,16 @@ import java.util.Date;
 public class MqttModelServiceimpl implements MqttModelService {
 
     public BattleBotData ConvertJsonToModel(String payload) throws JsonProcessingException {
+        if (payload == null) {
 
+            throw new IllegalArgumentException("Payload is null");
+        }
         ObjectMapper objectMapper = new ObjectMapper();
         BattleBotData battleBotData = objectMapper.readValue(payload, BattleBotData.class);
         battleBotData.setTimestamp(new Date());
         return battleBotData;
     }
+
 
 
 }

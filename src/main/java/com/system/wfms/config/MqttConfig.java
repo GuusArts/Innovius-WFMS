@@ -1,6 +1,6 @@
 package com.system.wfms.config;
 
-import com.system.wfms.service.TemperatureSensorService;
+import com.system.wfms.service.KettleService;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,9 +21,9 @@ import org.springframework.messaging.MessageHandler;
 @IntegrationComponentScan
 public class MqttConfig {
 
-    private final TemperatureSensorService temperatureSensorService;
+    private final KettleService temperatureSensorService;
 
-    public MqttConfig(TemperatureSensorService temperatureSensorService) {
+    public MqttConfig(KettleService temperatureSensorService) {
         this.temperatureSensorService = temperatureSensorService;
     }
 
@@ -35,14 +35,16 @@ public class MqttConfig {
     }
 
     @Bean
-    public MessageProducer inbound() {
+    public MessageProducer inboundLiveData() {
         MqttPahoMessageDrivenChannelAdapter adapter =
-                new MqttPahoMessageDrivenChannelAdapter("mqtt-explorer-bf22114c", mqttClientFactory(), "brewcast/history/battlebot64");
-        adapter.setCompletionTimeout(1000); // set a timeout if needed
+                new MqttPahoMessageDrivenChannelAdapter("mqtt-explorer-3a348068", mqttClientFactory(), "brewcast/history/battlebot32");
+        adapter.setCompletionTimeout(5000);
         adapter.setConverter(new DefaultPahoMessageConverter());
         adapter.setOutputChannel(mqttInputChannel());
         return adapter;
     }
+
+
 
     @Bean
     public MessageChannel mqttInputChannel() {
@@ -54,7 +56,7 @@ public class MqttConfig {
     public MessageHandler mqttMessageHandler() {
         return message -> {
             String payload = (String) message.getPayload();
-
+            System.out.println(payload);
             try {
                 temperatureSensorService.processTemperatureSensor(payload);
             } catch (Exception e) {
@@ -66,7 +68,12 @@ public class MqttConfig {
     @Bean
     public MqttConnectOptions mqttConnectOptions() {
         MqttConnectOptions options = new MqttConnectOptions();
-        options.setServerURIs(new String[]{"tcp://buildbot64:1883"}); // Correct the scheme to "tcp"
+        options.setServerURIs(new String[]{"tcp://buildbot32:1883"});
+
+
+
+        // Correct the scheme to "tcp"
+
         // Add other configuration if required (e.g., username, password)
         return options;
     }

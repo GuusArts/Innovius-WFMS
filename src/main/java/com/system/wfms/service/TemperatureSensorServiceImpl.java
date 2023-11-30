@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.Date;
 
 @Service
-public class TemperatureSensorServiceImpl implements TemperatureSensorService {
+public class TemperatureSensorServiceImpl implements KettleService {
 
     private static final Logger logger = LoggerFactory.getLogger(TemperatureSensorServiceImpl.class);
     private final MqttModelService mqttModelService;
@@ -36,10 +36,10 @@ public class TemperatureSensorServiceImpl implements TemperatureSensorService {
         }
     }
 
+
     public TemperatureData RetrieveTempData() throws Exception {
         return processTemperatureSensor(Payload);
     }
-
 
 
     public TemperatureData TempSendToDB;

@@ -9,7 +9,7 @@ public class BattleBotDataDetails {
     @JsonProperty("DisplaySettings")
     private DisplaySettings displaySettings;
 
-    @JsonProperty("Kettle OneWireGpioModule-1")
+    @JsonProperty("kettleOneWireGpioModule")
     private KettleOneWireGpioModule kettleOneWireGpioModule;
 
     @JsonProperty("Kettle Sensor")
@@ -17,6 +17,7 @@ public class BattleBotDataDetails {
 
     @JsonProperty("Kettle Setpoint")
     private KettleSetpoint kettleSetpoint;
+
 
     @JsonProperty("Kettle Actuator")
     private KettleActuator kettleActuator;
