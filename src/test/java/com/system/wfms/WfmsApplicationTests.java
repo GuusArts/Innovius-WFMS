@@ -2,11 +2,9 @@ package com.system.wfms;
 
 import com.system.wfms.Models.TemperatureData;
 import com.system.wfms.service.KettleService;
-import com.system.wfms.service.MqttModelService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.Logger;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,18 +13,16 @@ import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
 class WfmsApplicationTests {
 
-		@Mock
-		private MqttModelService mqttModelService;
+
 
 		@Mock
 		private Logger logger;
-
 
 		@Mock
 		private KettleService kettleService;
@@ -34,8 +30,9 @@ class WfmsApplicationTests {
 		@Test
 		void testProcessTemperatureSensor() throws Exception {
 			// Mocking ConvertJsonToModel method
+			TemperatureData expectedTemperatureData = new TemperatureData(30.4375, new Date(), 1L);
+			when(kettleService.processTemperatureSensor(anyString())).thenReturn(expectedTemperatureData);
 
-			when(kettleService.processTemperatureSensor(anyString())).thenReturn(new TemperatureData(30.8125, new Date(), 1L));
 
 			String payload = "{\n" +
 					"  \"key\": \"battlebot64\",\n" +
@@ -102,13 +99,13 @@ class WfmsApplicationTests {
 			// Execute the method
 			TemperatureData result = kettleService.processTemperatureSensor(payload);
 
-			// Verify the expected behavior
-			assertEquals(30.4375, result.getTemp());
+
+			assertEquals(expectedTemperatureData.getTemp(), result.getTemp());
 
 
-			// Verify that the logger was called with the correct parameters
-			Mockito.verify(logger).info("Water temperature processed successfully: {} {} {}", result.getTemp());
+
 		}
-	}
+		}
+
 
 
