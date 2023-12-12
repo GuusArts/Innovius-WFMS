@@ -6,11 +6,10 @@ import javax.persistence.*;
 import java.util.Date;
 
 @Entity
-@Table(name = "TempData")
 @Data
 @AllArgsConstructor
 @Builder
-public class TemperatureData {
+public class SideKettleSensor {
 
 
     private Long id;
@@ -22,7 +21,7 @@ public class TemperatureData {
     private Date timestamp;
 
     // Explicitly defined constructor
-    public TemperatureData(Double temp, Date timestamp, Long id) {
+    public SideKettleSensor(Double temp, Date timestamp, Long id) {
         this.temp = temp;
         this.timestamp = timestamp;
         this.id = id;

@@ -37,7 +37,7 @@ public class MqttConfig {
     @Bean
     public MessageProducer inboundLiveData() {
         MqttPahoMessageDrivenChannelAdapter adapter =
-                new MqttPahoMessageDrivenChannelAdapter("mqtt-explorer-3a348068", mqttClientFactory(), "brewcast/history/battlebot32");
+                new MqttPahoMessageDrivenChannelAdapter("mqtt-explorer-bf22114c", mqttClientFactory(), "brewcast/history/battlebot64");
         adapter.setCompletionTimeout(5000);
         adapter.setConverter(new DefaultPahoMessageConverter());
         adapter.setOutputChannel(mqttInputChannel());
@@ -59,6 +59,7 @@ public class MqttConfig {
             System.out.println(payload);
             try {
                 temperatureSensorService.processTemperatureSensor(payload);
+                temperatureSensorService.processSideKettleSensor(payload);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
@@ -68,8 +69,9 @@ public class MqttConfig {
     @Bean
     public MqttConnectOptions mqttConnectOptions() {
         MqttConnectOptions options = new MqttConnectOptions();
-        options.setServerURIs(new String[]{"tcp://buildbot32:1883"});
-
+        options.setServerURIs(new String[]{"tcp://buildbot64:1883"});
+        options.setPassword("flappie".toCharArray());
+        options.setUserName("Guus1245");
 
 
         // Correct the scheme to "tcp"

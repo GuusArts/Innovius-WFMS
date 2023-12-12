@@ -1,19 +1,44 @@
 package com.system.wfms.Models;
 
-import javax.persistence.Entity;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
 
+import javax.persistence.*;
+
+
+@Table(name = "Winetanks")
+@Data
+@AllArgsConstructor
+@Builder
 @Entity
 public class WineTank {
-    private Long iD;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String name;
     private Double volume;
 
+    public WineTank(){
+
+    }
+    public String getWineCategory() {
+        return WineCategory;
+    }
+
+    public void setWineCategory(String wineCategory) {
+        WineCategory = wineCategory;
+    }
+
+    private String WineCategory;
+
     public Long getiD() {
-        return iD;
+        return id;
     }
 
     public void setiD(Long iD) {
-        this.iD = iD;
+        this.id = iD;
     }
 
     public String getName() {
