@@ -1,9 +1,13 @@
 package com.system.wfms.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.system.wfms.DAL.WineRepository;
 import com.system.wfms.Models.SideKettleSensor;
 import com.system.wfms.Models.TemperatureData;
+import com.system.wfms.WineTank;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -15,11 +19,13 @@ public class KettleServiceImpl implements KettleService {
     private static final Logger logger = LoggerFactory.getLogger(KettleServiceImpl.class);
     private final MqttModelService mqttModelService;
 
+    private final WineRepository wineRepository;
     private String Payload;
 
-    public KettleServiceImpl(MqttModelService battlebotService) {
+    @Autowired
+    public KettleServiceImpl(MqttModelService battlebotService, WineRepository wineRepository) {
         this.mqttModelService = battlebotService;
-
+        this.wineRepository = wineRepository;
     }
 
 
@@ -53,6 +59,24 @@ public class KettleServiceImpl implements KettleService {
         }
     }
 
+
+    public WineTank ConvertPayloadToWineTank(String payload) throws JsonProcessingException {
+        Payload = payload;
+        Date timestamp = mqttModelService.ConvertJsonToModel(payload).getTimestamp();
+        String name = mqttModelService.ConvertJsonToModel(payload).getKey();
+        Long id = 1L;
+        Double volume = 2000.0;
+        String type = "Dry";
+        String WineCategory = "Red";
+        WineTank wineTank = new WineTank(id,name,volume,WineCategory,type);
+
+        wineRepository.save(wineTank);
+        return wineTank;
+    }
+
+    public WineTank RetrieveWineTank() throws JsonProcessingException {
+         return ConvertPayloadToWineTank(Payload);
+    }
 
     public SideKettleSensor RetrieveSideKettleData() throws Exception {
         return processSideKettleSensor(Payload);

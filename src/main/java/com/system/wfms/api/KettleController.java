@@ -29,6 +29,8 @@ public class KettleController {
         return ResponseEntity.badRequest().build();
     }
 
+
+
     @GetMapping("/kettle")
     public ResponseEntity<SideKettleSensor> SendSideKettleTemp() throws Exception {
         if(!temperatureSensorService.RetrieveTempData().getTemp().isNaN()){

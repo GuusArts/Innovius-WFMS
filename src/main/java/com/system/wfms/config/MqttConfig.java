@@ -23,6 +23,8 @@ public class MqttConfig {
 
     private final KettleService temperatureSensorService;
 
+
+
     public MqttConfig(KettleService temperatureSensorService) {
         this.temperatureSensorService = temperatureSensorService;
     }
@@ -60,6 +62,7 @@ public class MqttConfig {
             try {
                 temperatureSensorService.processTemperatureSensor(payload);
                 temperatureSensorService.processSideKettleSensor(payload);
+                temperatureSensorService.ConvertPayloadToWineTank(payload);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }

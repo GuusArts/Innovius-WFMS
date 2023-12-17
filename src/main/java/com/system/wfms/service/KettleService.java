@@ -2,6 +2,7 @@ package com.system.wfms.service;
 
 import com.system.wfms.Models.SideKettleSensor;
 import com.system.wfms.Models.TemperatureData;
+import com.system.wfms.WineTank;
 
 public interface KettleService {
     TemperatureData processTemperatureSensor(String payload) throws Exception;
@@ -10,4 +11,7 @@ public interface KettleService {
     TemperatureData RetrieveTempData() throws Exception;
 
     SideKettleSensor RetrieveSideKettleData() throws Exception;
+
+    WineTank ConvertPayloadToWineTank(String payload) throws Exception;
+    WineTank RetrieveWineTank() throws Exception;
 }

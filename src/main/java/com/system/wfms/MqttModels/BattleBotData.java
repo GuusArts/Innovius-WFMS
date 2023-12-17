@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Date;
 
 public class BattleBotData {
+    @JsonProperty("key")
     private String key;
 
     @JsonProperty("data")

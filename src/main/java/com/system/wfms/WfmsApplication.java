@@ -2,11 +2,11 @@ package com.system.wfms;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.context.annotation.Import;
 
 
 @SpringBootApplication
-@EnableJpaRepositories(basePackages = "com.system.wfms.DAL.WineRepository")
+@Import(JpaConfig.class)
 public class WfmsApplication {
 
 	public static void main(String[] args) {
