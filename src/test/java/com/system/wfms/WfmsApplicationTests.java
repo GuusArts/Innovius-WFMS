@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.system.wfms.Models.TemperatureData;
 import com.system.wfms.MqttModels.*;
 import com.system.wfms.api.KettleController;
-import com.system.wfms.service.KettleService;
+import com.system.wfms.service.WineTankService;
 import com.system.wfms.service.MqttModelService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -37,7 +37,7 @@ class WfmsApplicationTests {
 	private Logger logger;
 
 	@Mock
-	private KettleService kettleService;
+	private WineTankService kettleService;
 	@Mock
 	private MqttModelService mqttModelService;
 

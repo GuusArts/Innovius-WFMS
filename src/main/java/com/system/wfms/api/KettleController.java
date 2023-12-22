@@ -1,14 +1,17 @@
 package com.system.wfms.api;
 
 
+import com.system.wfms.DAL.WineTankRepository;
 import com.system.wfms.Models.SideKettleSensor;
 import com.system.wfms.Models.TemperatureData;
-import com.system.wfms.service.KettleService;
+import com.system.wfms.Models.WineTank;
+import com.system.wfms.service.WineTankService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Collections;
+import java.util.List;
 
 
 @RestController
@@ -16,7 +19,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/monitor")
 public class KettleController {
 
-    private final KettleService temperatureSensorService;
+    @Autowired
+    private final WineTankService temperatureSensorService;
+    @Autowired
+    WineTankRepository wineTankRepository;
+
+
 
     @GetMapping("/temp")
     public ResponseEntity<TemperatureData> SendTemp() throws Exception {
@@ -31,6 +39,8 @@ public class KettleController {
 
 
 
+
+
     @GetMapping("/kettle")
     public ResponseEntity<SideKettleSensor> SendSideKettleTemp() throws Exception {
         if(!temperatureSensorService.RetrieveTempData().getTemp().isNaN()){
@@ -42,12 +52,23 @@ public class KettleController {
         return ResponseEntity.badRequest().build();
     }
 
+    @GetMapping("/winetanks")
+    public ResponseEntity<List<WineTank>> SendWinetanks() throws Exception {
+            if(!wineTankRepository.findAll().isEmpty()) {
+              return   ResponseEntity.ok().body(wineTankRepository.findAll());
+            }else {
+                return ResponseEntity.ok(Collections.emptyList());
+            }
+
+    }
 
 
 
 
-    public KettleController(KettleService temperatureSensorService) {
+
+    public KettleController(WineTankService temperatureSensorService, WineTankRepository wineTankRepository) {
         this.temperatureSensorService = temperatureSensorService;
+        this.wineTankRepository = wineTankRepository;
 
     }
 }

@@ -1,15 +1,14 @@
-package com.system.wfms;
+package com.system.wfms.Models;
 
-import lombok.Builder;
+import jakarta.persistence.*;
 import lombok.Data;
-
-import javax.persistence.*;
+import lombok.NoArgsConstructor;
 
 
 @Table(name = "Winetanks")
 @Data
-@Builder
 @Entity
+@NoArgsConstructor
 public class WineTank {
 
     @Id
@@ -25,24 +24,41 @@ public class WineTank {
 
     private String wineCategory;
 
-    @Column(name = "Type")
-    private String type;
+    @Column(name = "variety")
+    private String variety;
+
+    @Column(name = "temperature")
+    private Double temperature;
 
 
-    public String getType() {
-        return type;
+    @ManyToOne
+    @JoinColumn(name="wineroom_id")
+    private WineRoom wineRoom;
+    @Column(name = "ActuatorOn")
+    private Boolean tempActuatorON;
+
+
+
+
+    public String getVariety() {
+        return variety;
     }
 
-    public WineTank(Long id, String name, Double volume, String wineCategory, String type) {
+
+
+    public WineTank(Long id, String name, Double volume, String wineCategory, String variety, Double temperature, Boolean tempActuatorON, WineRoom wineRoom) {
         this.id = id;
         this.name = name;
         this.volume = volume;
         this.wineCategory = wineCategory;
-        this.type = type;
+        this.variety = variety;
+        this.temperature = temperature;
+        this.tempActuatorON = tempActuatorON;
+        this.wineRoom = wineRoom;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setVariety(String variety) {
+        this.variety = variety;
     }
 
 

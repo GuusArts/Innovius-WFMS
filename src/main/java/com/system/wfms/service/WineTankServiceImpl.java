@@ -1,31 +1,37 @@
 package com.system.wfms.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.system.wfms.DAL.WineRepository;
+import com.system.wfms.DAL.WineRoomRepository;
+import com.system.wfms.DAL.WineTankRepository;
 import com.system.wfms.Models.SideKettleSensor;
 import com.system.wfms.Models.TemperatureData;
-import com.system.wfms.WineTank;
+import com.system.wfms.Models.WineRoom;
+import com.system.wfms.Models.WineTank;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Service
-public class KettleServiceImpl implements KettleService {
+public class WineTankServiceImpl implements WineTankService {
 
-    private static final Logger logger = LoggerFactory.getLogger(KettleServiceImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(WineTankServiceImpl.class);
     private final MqttModelService mqttModelService;
 
-    private final WineRepository wineRepository;
+    private final WineTankRepository wineTankRepository;
+    private final WineRoomRepository wineRoomRepository;
     private String Payload;
 
     @Autowired
-    public KettleServiceImpl(MqttModelService battlebotService, WineRepository wineRepository) {
+    public WineTankServiceImpl(MqttModelService battlebotService, WineTankRepository wineRepository, WineRoomRepository wineRoomRepository) {
         this.mqttModelService = battlebotService;
-        this.wineRepository = wineRepository;
+        this.wineTankRepository = wineRepository;
+        this.wineRoomRepository = wineRoomRepository;
     }
 
 
@@ -68,10 +74,28 @@ public class KettleServiceImpl implements KettleService {
         Double volume = 2000.0;
         String type = "Dry";
         String WineCategory = "Red";
-        WineTank wineTank = new WineTank(id,name,volume,WineCategory,type);
+        Double temperature = mqttModelService.ConvertJsonToModel(payload).getData().getKettleSensor().getValue();
+        Boolean tempActuatorON = mqttModelService.ConvertJsonToModel(payload).getData().getKettlePID().isActive();
+        WineRoom wineRoom = new WineRoom();
+        WineTank wineTank = new WineTank(id,name,volume,WineCategory,type, temperature, tempActuatorON, wineRoom);
 
-        wineRepository.save(wineTank);
+
         return wineTank;
+    }
+
+
+
+    public void AddTank(){
+
+    }
+    public void GetWineTankFromDB(){
+        List<WineTank> wineTankList = new ArrayList<>();
+        wineTankList = wineTankRepository.findAll();
+    }
+
+    public void  AssignWineRoom(){
+        WineRoom wineRoom = new WineRoom();
+
     }
 
     public WineTank RetrieveWineTank() throws JsonProcessingException {

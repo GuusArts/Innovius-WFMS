@@ -1,6 +1,6 @@
 package com.system.wfms.config;
 
-import com.system.wfms.service.KettleService;
+import com.system.wfms.service.WineTankService;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,12 +21,12 @@ import org.springframework.messaging.MessageHandler;
 @IntegrationComponentScan
 public class MqttConfig {
 
-    private final KettleService temperatureSensorService;
+    private final WineTankService wineTankService;
 
 
 
-    public MqttConfig(KettleService temperatureSensorService) {
-        this.temperatureSensorService = temperatureSensorService;
+    public MqttConfig(WineTankService wineTankService) {
+        this.wineTankService = wineTankService;
     }
 
     @Bean
@@ -60,9 +60,9 @@ public class MqttConfig {
             String payload = (String) message.getPayload();
             System.out.println(payload);
             try {
-                temperatureSensorService.processTemperatureSensor(payload);
-                temperatureSensorService.processSideKettleSensor(payload);
-                temperatureSensorService.ConvertPayloadToWineTank(payload);
+                wineTankService.processTemperatureSensor(payload);
+                wineTankService.processSideKettleSensor(payload);
+                wineTankService.ConvertPayloadToWineTank(payload);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }

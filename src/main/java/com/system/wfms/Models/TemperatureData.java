@@ -2,7 +2,7 @@ package com.system.wfms.Models;
 
 import lombok.*;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.Date;
 
 @Entity
@@ -12,7 +12,8 @@ import java.util.Date;
 @Builder
 public class TemperatureData {
 
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "temp", nullable = false, length = 20)
