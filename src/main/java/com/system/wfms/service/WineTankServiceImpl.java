@@ -76,14 +76,15 @@ public class WineTankServiceImpl implements WineTankService {
         String WineCategory = "Red";
         Double temperature = mqttModelService.ConvertJsonToModel(payload).getData().getKettleSensor().getValue();
         Boolean tempActuatorON = mqttModelService.ConvertJsonToModel(payload).getData().getKettlePID().isActive();
-        WineRoom wineRoom = new WineRoom();
-        WineTank wineTank = new WineTank(id,name,volume,WineCategory,type, temperature, tempActuatorON, wineRoom);
 
 
-        return wineTank;
+
+        return null;
     }
 
-
+    public void SendWineTankToDb(WineTank winetank){
+        wineTankRepository.save(winetank);
+    }
 
     public void AddTank(){
 
