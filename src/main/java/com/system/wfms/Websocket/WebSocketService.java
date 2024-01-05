@@ -2,6 +2,8 @@ package com.system.wfms.Websocket;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.system.wfms.service.MetricsService;
+import com.system.wfms.service.MetricsServiceimpl;
 import jakarta.annotation.PostConstruct;
 import jakarta.websocket.*;
 import org.springframework.stereotype.Service;
@@ -22,11 +24,15 @@ import java.util.stream.Collectors;
 public class WebSocketService {
 
     private static final String WS_ENDPOINT = "ws://buildbot64.local/history/timeseries/stream";
-    private static  String COMMAND_MESSAGE_TEMPLATE = "{\"id\":\"test-command\",\"command\":\"ranges\",\"query\":{\"fields\":[\"%s\"],\"duration\":\"1d\"}}";
+    private static String COMMAND_MESSAGE_TEMPLATE = "{\"id\":\"test-command\",\"command\":\"ranges\",\"query\":{\"fields\":[\"%s\"],\"duration\":\"1d\"}}";
 
     private static final String url = "http://buildbot64.local/history/timeseries/fields";
 
     private static final String postData = "{\"duration\":\"1d\"}";
+
+
+    private static String lastReceivedMessage;
+
 
     @PostConstruct
     public void init() {
@@ -34,7 +40,6 @@ public class WebSocketService {
         if (jsonResponse != null) {
             modifyCommandMessage(jsonResponse);
             connectToWebSocket();
-
         }
     }
 
@@ -63,7 +68,7 @@ public class WebSocketService {
                     response.append(inputLine);
                 }
 
-                System.out.println("Response: " + response.toString());
+
                 return response.toString();
             }
 
@@ -106,8 +111,12 @@ public class WebSocketService {
         }
     }
 
+    // Instantiate the MetricProcessorClass
+
+
     @ClientEndpoint
     public static class WebSocketClient {
+
 
         @OnOpen
         public void onOpen(Session session) {
@@ -120,7 +129,19 @@ public class WebSocketService {
 
         @OnMessage
         public void onMessage(String message) {
-            System.out.println("[message] " + message);
+
+            WebSocketService.lastReceivedMessage = message;
+            handleReceivedMessage();
+        }
+
+        public void handleReceivedMessage() {
+            // You can access the last received message or perform additional processing here
+
+
+            MetricsService metricsService = new MetricsServiceimpl();
+            metricsService.separateData(lastReceivedMessage);
+
+
         }
 
         @OnClose
