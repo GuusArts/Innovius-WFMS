@@ -52,12 +52,12 @@ public class KettleController {
         return ResponseEntity.badRequest().build();
     }
 
-    @GetMapping("/winetanks")
-    public ResponseEntity<List<WineTank>> SendWinetanks() throws Exception {
+    @GetMapping("/winetank/list")
+    public List<WineTank> SendWinetanks() throws Exception {
             if(!wineTankRepository.findAll().isEmpty()) {
-              return   ResponseEntity.ok().body(wineTankRepository.findAll());
+              return wineTankRepository.findAll();
             }else {
-                return ResponseEntity.ok(Collections.emptyList());
+                return Collections.emptyList();
             }
 
     }
