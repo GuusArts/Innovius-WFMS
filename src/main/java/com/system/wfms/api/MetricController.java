@@ -22,7 +22,7 @@ public class MetricController {
 
     @GetMapping("List/Sparks")
     public List<Spark> GetAvaibleMetrics(){
-       return metricsService.SendMetricsToDB();
+       return null;
     }
 
 

@@ -7,5 +7,5 @@ import java.util.List;
 public interface MetricsService   {
     public void GetSparkJson(String json);
 
-    public List<Spark> SendMetricsToDB();
+    public List<Spark> SendMetricsToDB(List<Spark> sparkList);
 }

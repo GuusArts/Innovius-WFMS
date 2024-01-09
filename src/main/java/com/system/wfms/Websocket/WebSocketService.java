@@ -4,6 +4,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.system.wfms.service.MetricsService;
 import com.system.wfms.service.MetricsServiceimpl;
+import com.system.wfms.service.WebSocketChannel;
+import com.system.wfms.service.WebSocketChannelimpl;
 import jakarta.annotation.PostConstruct;
 import jakarta.websocket.*;
 import org.springframework.stereotype.Service;
@@ -32,6 +34,8 @@ public class WebSocketService {
 
 
     private static String lastReceivedMessage;
+
+
 
 
     @PostConstruct
@@ -138,8 +142,11 @@ public class WebSocketService {
             // You can access the last received message or perform additional processing here
 
 
-            MetricsService metricsService = new MetricsServiceimpl(sparkRepository, sensorRepository, sensorDataRepository);
+
+            MetricsService metricsService = new MetricsServiceimpl();
+            WebSocketChannel webSocketChannel = new WebSocketChannelimpl();
             metricsService.GetSparkJson(lastReceivedMessage);
+            webSocketChannel.RetrieveWebsocketMessage(lastReceivedMessage);
 
 
         }
