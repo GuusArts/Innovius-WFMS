@@ -28,7 +28,7 @@ public class WineRoomController {
         this.wineTankService = wineTankService;
     }
 
-    @PostMapping("/createwineroom")
+    @PostMapping("/create/wineroom")
     public ResponseEntity<WineRoom> SendWinetanks(@RequestBody @Valid WineRoom wineRoom) throws Exception {
         System.out.println(wineRoom.getName());
        wineRoomRepository.save(wineRoom);

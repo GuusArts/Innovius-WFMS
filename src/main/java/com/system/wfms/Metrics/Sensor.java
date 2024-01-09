@@ -1,24 +1,62 @@
 package com.system.wfms.Metrics;
 
-import com.google.gson.JsonArray;
+import jakarta.persistence.*;
 
+import java.util.List;
+
+@Table(name = "sensors")
+@Entity
 public class Sensor {
-    private String name;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "SensorId")
+    private Long sensorID;
+
+    @OneToMany(mappedBy = "sensor")
+    private List<SensorData> sensorDataList;
+
+    @ManyToOne
+    @JoinColumn(name = "SparkID")
+    private Spark spark;
+
+    @Column(name = "name")
+    private String sensorName;
+
+    @Column(name = "Unit_of_Measurement")
     private String unit_of_Measurment;
-    private JsonArray value;
 
-    public Sensor(String name, String unit_of_Measurment, JsonArray value) {
-        this.name = name;
-        this.unit_of_Measurment = unit_of_Measurment;
-        this.value = value;
+
+    public Long getSensorID() {
+        return sensorID;
     }
 
-    public String getName() {
-        return name;
+    public void setSensorID(Long sensorID) {
+        this.sensorID = sensorID;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public List<SensorData> getSensorDataList() {
+        return sensorDataList;
+    }
+
+    public void setSensorDataList(List<SensorData> sensorDataList) {
+        this.sensorDataList = sensorDataList;
+    }
+
+    public Spark getSpark() {
+        return spark;
+    }
+
+    public void setSpark(Spark spark) {
+        this.spark = spark;
+    }
+
+    public String getSensorName() {
+        return sensorName;
+    }
+
+    public void setSensorName(String name) {
+        this.sensorName = name;
     }
 
     public String getUnit_of_Measurment() {
@@ -29,11 +67,5 @@ public class Sensor {
         this.unit_of_Measurment = unit_of_Measurment;
     }
 
-    public JsonArray getValue() {
-        return value;
-    }
 
-    public void setValue(JsonArray value) {
-        this.value = value;
-    }
 }

@@ -1,32 +1,27 @@
 package com.system.wfms.Metrics;
 
+import jakarta.persistence.*;
+
 import java.util.List;
 
+@Table(name = "sparkdata")
+@Entity
 public class Spark {
-    private Long id;
-    private String name;
-    private List<Sensor> sensors;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "SparkID")
+    private Long SparkID;
+    @Column(name = "sparkName")
+    private String SparkName;
+    @Column(name = "SensorID")
+    private Long SensorID;
 
-    public Long getId() {
-        return id;
+    public Long getSensorID() {
+        return SensorID;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Spark(Long id, String name, List<Sensor> sensors) {
-        this.id = id;
-        this.name = name;
-        this.sensors = sensors;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+    public void setSensorID(Long sensorID) {
+        SensorID = sensorID;
     }
 
     public List<Sensor> getSensors() {
@@ -36,4 +31,26 @@ public class Spark {
     public void setSensors(List<Sensor> sensors) {
         this.sensors = sensors;
     }
+
+    @OneToMany(mappedBy = "spark")
+    private List<Sensor> sensors;
+
+    public Long getSparkID() {
+        return SparkID;
+    }
+
+    public void setSparkID(Long id) {
+        this.SparkID = id;
+    }
+
+
+    public String getSparkName() {
+        return SparkName;
+    }
+
+    public void setSparkName(String name) {
+        this.SparkName = name;
+    }
+
+
 }

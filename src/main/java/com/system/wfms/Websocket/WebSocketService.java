@@ -138,8 +138,8 @@ public class WebSocketService {
             // You can access the last received message or perform additional processing here
 
 
-            MetricsService metricsService = new MetricsServiceimpl();
-            metricsService.separateData(lastReceivedMessage);
+            MetricsService metricsService = new MetricsServiceimpl(sparkRepository, sensorRepository, sensorDataRepository);
+            metricsService.GetSparkJson(lastReceivedMessage);
 
 
         }

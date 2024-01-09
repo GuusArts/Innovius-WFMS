@@ -15,7 +15,7 @@ import java.util.List;
 
 
 @RestController
-@CrossOrigin (origins= {"http://localhost:8080","http://localhost:5000"})
+@CrossOrigin (origins= {"http://localhost:8080"})
 @RequestMapping("/monitor")
 public class KettleController {
 
