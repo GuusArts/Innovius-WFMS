@@ -1,8 +1,9 @@
 package com.system.wfms.Metrics;
 
-import jakarta.persistence.*;
-
-import java.util.List;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 @Table(name = "sparkdata")
 @Entity
@@ -14,8 +15,7 @@ public class Spark {
     private String SparkName;
 
 
-    @OneToMany(mappedBy = "spark", cascade = CascadeType.ALL)
-    private List<Sensor> sensors;
+
 
 
     public Integer getSparkID() {
@@ -27,13 +27,9 @@ public class Spark {
     }
 
 
-    public List<Sensor> getSensors() {
-        return sensors;
-    }
 
-    public void setSensors(List<Sensor> sensors) {
-        this.sensors = sensors;
-    }
+
+
 
 
 

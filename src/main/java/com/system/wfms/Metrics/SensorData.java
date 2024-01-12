@@ -11,9 +11,8 @@ public class SensorData {
     @Column(name = "DataID")
     private Long dataID;
 
-    @ManyToOne
-    @JoinColumn(name = "SensorId")
-    private Sensor sensor;
+    @Column(name = "SensorId")
+    private Integer SensorId;
 
     @Column(name="timestamp")
     private LocalDateTime timestamp;
@@ -28,12 +27,13 @@ public class SensorData {
         this.value = value;
     }
 
-    public Sensor getSensor() {
-        return sensor;
+
+    public Integer getSensorId() {
+        return SensorId;
     }
 
-    public void setSensor(Sensor sensor) {
-        this.sensor = sensor;
+    public void setSensorId(Integer sensorId) {
+        SensorId = sensorId;
     }
 
     public Long getDataID() {

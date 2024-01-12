@@ -29,12 +29,16 @@ import java.util.regex.Pattern;
 public class MetricsServiceimpl implements MetricsService {
     Map<String, List<JsonObject>> metricGroups = new HashMap<>();
     private Map<String, Sensor> sensorsByName = new HashMap<>();
+    private List<Sensor> allSensors = new ArrayList<>();
+    private List<SensorData> allSensorsData= new ArrayList<>();
+
     Integer Sparkid = 1;
 
     Integer Sensorid = 1;
 
 
-    private List<Spark> sparkList = new ArrayList<>();
+
+
 
     @Autowired
     private SparkRepository sparkRepository;
@@ -102,7 +106,7 @@ public class MetricsServiceimpl implements MetricsService {
                         Sensor sensor = new Sensor();
                         sensor.setSensorName(metricObjectName);
                         sensor.setSensorID(Sensorid++);
-                        sensor.setSpark(spark);
+                        sensor.setSparkId(spark.getSparkID());
                         sensor.setUnit_of_Measurment(unitOfMeasurement);
                         JsonArray SensorDataObject = currentObject.get("values").getAsJsonArray();
                         for (JsonElement SensorData : SensorDataObject) {
@@ -115,20 +119,23 @@ public class MetricsServiceimpl implements MetricsService {
                             SensorData sensorData = new SensorData();
                             sensorData.setDataID(timestamp);
                             sensorData.setValue(value);
-                            sensorData.setSensor(sensor);
+                            sensorData.setSensorId(sensor.getSensorID());
                             sensorData.setTimestamp(localDate);
 
 
                             SensorDataList.add(sensorData);
+                            allSensorsData.addAll(SensorDataList);
                             // You may want to do something with sensorData here
                         }
-                        sensor.setSensorDataList(SensorDataList);
+
                         sensorList.add(sensor);
+                        allSensors.addAll(sensorList);
 
 
                     } else {
                         System.out.println("No match found for unit of measurement");
                     }
+
                 }
             } else {
                 System.out.println("Invalid or missing '__name__' field in JSON object: " + element);
@@ -138,7 +145,7 @@ public class MetricsServiceimpl implements MetricsService {
         List<Spark> sparkList = new ArrayList<>();
         for (Map.Entry<String, Spark> entry : sparksByName.entrySet()) {
             Spark spark = entry.getValue();
-            spark.setSensors(sensorsBySpark.get(entry.getKey()));
+
             sparkList.add(spark);
         }
 
@@ -146,7 +153,7 @@ public class MetricsServiceimpl implements MetricsService {
         System.out.println("Het aantal spark is:" + sparkList.size());
         SendMetricsToDB(sparkList);
         sensorsBySpark.clear();
-
+        allSensors.clear();
         sparksByName.clear();
         Sparkid = 0; // Reset the id for the next iteration
         Sensorid = 0;
@@ -157,34 +164,19 @@ public class MetricsServiceimpl implements MetricsService {
     public void SendMetricsToDB(List<Spark> sparkList) {
         for (Spark spark : sparkList) {
             System.out.println("De spark is:" + spark.getSparkName() + spark.getSparkID());
+            sparkRepository.save(spark);
 
-
-            for (Sensor sensor : spark.getSensors()) {
-                System.out.println("Dit is een sensor van deze spark" + sensor.getSensorName() + sensor.getSensorID());
-
-
-                for (SensorData sensorData : sensor.getSensorDataList()) {
-
-                }
-
-            }
 
         }
-        for (Spark spark : sparkList) {
-            System.out.println("De spark is:" + spark.getSparkName() + spark.getSparkID());
-
-            for (Sensor sensor : spark.getSensors()) {
-                System.out.println("Dit is een sensor van deze spark" + sensor.getSensorName() + sensor.getSensorID());
-
-
-                for (SensorData sensorData : sensor.getSensorDataList()) {
-                    System.out.println(sensorData.getSensor().getSensorID().toString() + sensor.getSensorID().toString());
-
-                }
-
-            }
-
+        for (Sensor sensor : allSensors) {
+            System.out.println("De Sensors zijn:" + sensor.getSparkId());
+            sensorRepository.save(sensor);
         }
+        for (SensorData sensorData : allSensorsData) {
+
+            sensorDataRepository.save(sensorData);
+        }
+
     }
 
 }

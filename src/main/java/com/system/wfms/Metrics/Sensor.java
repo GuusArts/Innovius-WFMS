@@ -1,8 +1,9 @@
 package com.system.wfms.Metrics;
 
-import jakarta.persistence.*;
-
-import java.util.List;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 @Table(name = "sensors")
 @Entity
@@ -12,12 +13,10 @@ public class Sensor {
     @Column(name = "id")
     private Integer sensorID;
 
-    @OneToMany(mappedBy = "sensor")
-    private List<SensorData> sensorDataList;
+    @Column(name = "SparkID")
+    private Integer SparkId;
 
-    @ManyToOne
-    @JoinColumn(name = "SparkID")
-    private Spark spark;
+
 
     @Column(name = "SensorName")
     private String sensorName;
@@ -25,6 +24,13 @@ public class Sensor {
     @Column(name = "Unit_of_Measurement")
     private String unit_of_Measurment;
 
+    public Integer getSparkId() {
+        return SparkId;
+    }
+
+    public void setSparkId(Integer spark) {
+        this.SparkId = spark;
+    }
     public Integer getSensorID() {
         return sensorID;
     }
@@ -33,21 +39,6 @@ public class Sensor {
         this.sensorID = sensorID;
     }
 
-    public List<SensorData> getSensorDataList() {
-        return sensorDataList;
-    }
-
-    public void setSensorDataList(List<SensorData> sensorDataList) {
-        this.sensorDataList = sensorDataList;
-    }
-
-    public Spark getSpark() {
-        return spark;
-    }
-
-    public void setSpark(Spark spark) {
-        this.spark = spark;
-    }
 
     public String getSensorName() {
         return sensorName;
