@@ -8,21 +8,24 @@ import java.util.List;
 @Entity
 public class Spark {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "SparkID")
-    private Long SparkID;
+    private Integer SparkID;
     @Column(name = "sparkName")
     private String SparkName;
-    @Column(name = "SensorID")
-    private Long SensorID;
 
-    public Long getSensorID() {
-        return SensorID;
+
+    @OneToMany(mappedBy = "spark", cascade = CascadeType.ALL)
+    private List<Sensor> sensors;
+
+
+    public Integer getSparkID() {
+        return SparkID;
     }
 
-    public void setSensorID(Long sensorID) {
-        SensorID = sensorID;
+    public void setSparkID(Integer sparkID) {
+        SparkID = sparkID;
     }
+
 
     public List<Sensor> getSensors() {
         return sensors;
@@ -32,16 +35,7 @@ public class Spark {
         this.sensors = sensors;
     }
 
-    @OneToMany(mappedBy = "spark")
-    private List<Sensor> sensors;
 
-    public Long getSparkID() {
-        return SparkID;
-    }
-
-    public void setSparkID(Long id) {
-        this.SparkID = id;
-    }
 
 
     public String getSparkName() {

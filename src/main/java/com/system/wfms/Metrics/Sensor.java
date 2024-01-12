@@ -9,9 +9,8 @@ import java.util.List;
 public class Sensor {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "SensorId")
-    private Long sensorID;
+    @Column(name = "id")
+    private Integer sensorID;
 
     @OneToMany(mappedBy = "sensor")
     private List<SensorData> sensorDataList;
@@ -20,18 +19,17 @@ public class Sensor {
     @JoinColumn(name = "SparkID")
     private Spark spark;
 
-    @Column(name = "name")
+    @Column(name = "SensorName")
     private String sensorName;
 
     @Column(name = "Unit_of_Measurement")
     private String unit_of_Measurment;
 
-
-    public Long getSensorID() {
+    public Integer getSensorID() {
         return sensorID;
     }
 
-    public void setSensorID(Long sensorID) {
+    public void setSensorID(Integer sensorID) {
         this.sensorID = sensorID;
     }
 

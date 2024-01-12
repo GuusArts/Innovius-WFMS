@@ -3,12 +3,10 @@ package com.system.wfms.Websocket;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.system.wfms.service.MetricsService;
-import com.system.wfms.service.MetricsServiceimpl;
-import com.system.wfms.service.WebSocketChannel;
-import com.system.wfms.service.WebSocketChannelimpl;
 import jakarta.annotation.PostConstruct;
 import jakarta.websocket.*;
-import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -22,7 +20,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Service
+@Component
 public class WebSocketService {
 
     private static final String WS_ENDPOINT = "ws://buildbot64.local/history/timeseries/stream";
@@ -35,8 +33,12 @@ public class WebSocketService {
 
     private static String lastReceivedMessage;
 
+    @Autowired
+    private static MetricsService metricsService;
 
-
+    public WebSocketService(MetricsService metricsService) {
+        this.metricsService = metricsService;
+    }
 
     @PostConstruct
     public void init() {
@@ -115,12 +117,22 @@ public class WebSocketService {
         }
     }
 
+    public static String GetReceivedMessage() {
+        // You can access the last received message or perform additional processing here
+
+
+
+
+        metricsService.GetSparkJson(lastReceivedMessage);
+        return lastReceivedMessage;
+
+
+    }
     // Instantiate the MetricProcessorClass
 
 
     @ClientEndpoint
     public static class WebSocketClient {
-
 
         @OnOpen
         public void onOpen(Session session) {
@@ -135,21 +147,10 @@ public class WebSocketService {
         public void onMessage(String message) {
 
             WebSocketService.lastReceivedMessage = message;
-            handleReceivedMessage();
+            GetReceivedMessage();
         }
 
-        public void handleReceivedMessage() {
-            // You can access the last received message or perform additional processing here
 
-
-
-            MetricsService metricsService = new MetricsServiceimpl();
-            WebSocketChannel webSocketChannel = new WebSocketChannelimpl();
-            metricsService.GetSparkJson(lastReceivedMessage);
-            webSocketChannel.RetrieveWebsocketMessage(lastReceivedMessage);
-
-
-        }
 
         @OnClose
         public void onClose(Session session, CloseReason closeReason) {

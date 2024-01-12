@@ -4,9 +4,14 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.system.wfms.DAL.SensorDataRepository;
+import com.system.wfms.DAL.SensorRepository;
+import com.system.wfms.DAL.SparkRepository;
 import com.system.wfms.Metrics.Sensor;
 import com.system.wfms.Metrics.SensorData;
 import com.system.wfms.Metrics.Spark;
+import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -23,16 +28,24 @@ import java.util.regex.Pattern;
 
 public class MetricsServiceimpl implements MetricsService {
     Map<String, List<JsonObject>> metricGroups = new HashMap<>();
-    Long Sparkid = 0L;
+    private Map<String, Sensor> sensorsByName = new HashMap<>();
+    Integer Sparkid = 1;
 
-    Long Sensorid = 0L;
-    Long Dataid = 0L;
+    Integer Sensorid = 1;
 
 
     private List<Spark> sparkList = new ArrayList<>();
 
+    @Autowired
+    private SparkRepository sparkRepository;
+    @Autowired
+    private SensorRepository sensorRepository;
+    @Autowired
+    private SensorDataRepository sensorDataRepository;
 
     public void GetSparkJson(String jsonData) {
+
+
         JsonElement jsonElement = JsonParser.parseString(jsonData);
 
         if (jsonElement.isJsonArray()) {
@@ -57,7 +70,7 @@ public class MetricsServiceimpl implements MetricsService {
     private void ConvertJsonToSparkMetric(JsonObject element) {
         JsonObject data = element.getAsJsonObject("data");
         JsonArray ranges = data.getAsJsonArray("ranges");
-        List<SensorData> SensorDataList = new ArrayList<>();
+
         Map<String, List<Sensor>> sensorsBySpark = new HashMap<>();
         Map<String, Spark> sparksByName = new HashMap<>();
         Pattern pattern = Pattern.compile("\\[([^\\]]+)\\]");
@@ -76,7 +89,7 @@ public class MetricsServiceimpl implements MetricsService {
                     Spark newSpark = new Spark();
                     newSpark.setSparkID(Sparkid++);
                     newSpark.setSparkName(firstWord);
-                    newSpark.setSensorID(Sensorid++);
+
                     return newSpark;
                 });
 
@@ -85,12 +98,12 @@ public class MetricsServiceimpl implements MetricsService {
                     if (matcher.find()) {
                         String unitOfMeasurement = matcher.group(1);
 
+                        List<SensorData> SensorDataList = new ArrayList<>();
                         Sensor sensor = new Sensor();
                         sensor.setSensorName(metricObjectName);
                         sensor.setSensorID(Sensorid++);
                         sensor.setSpark(spark);
                         sensor.setUnit_of_Measurment(unitOfMeasurement);
-
                         JsonArray SensorDataObject = currentObject.get("values").getAsJsonArray();
                         for (JsonElement SensorData : SensorDataObject) {
                             JsonArray sensorValues = SensorData.getAsJsonArray();
@@ -104,13 +117,15 @@ public class MetricsServiceimpl implements MetricsService {
                             sensorData.setValue(value);
                             sensorData.setSensor(sensor);
                             sensorData.setTimestamp(localDate);
-                            sensorData.setSensorID(sensor.getSensorID());
+
 
                             SensorDataList.add(sensorData);
                             // You may want to do something with sensorData here
                         }
                         sensor.setSensorDataList(SensorDataList);
                         sensorList.add(sensor);
+
+
                     } else {
                         System.out.println("No match found for unit of measurement");
                     }
@@ -131,27 +146,47 @@ public class MetricsServiceimpl implements MetricsService {
         System.out.println("Het aantal spark is:" + sparkList.size());
         SendMetricsToDB(sparkList);
         sensorsBySpark.clear();
+
         sparksByName.clear();
-        Sparkid = 0L; // Reset the id for the next iteration
-        Sensorid = 0L;
+        Sparkid = 0; // Reset the id for the next iteration
+        Sensorid = 0;
 
     }
 
+    @Transactional
+    public void SendMetricsToDB(List<Spark> sparkList) {
+        for (Spark spark : sparkList) {
+            System.out.println("De spark is:" + spark.getSparkName() + spark.getSparkID());
 
-    public List<Spark> SendMetricsToDB(List<Spark> sparkList){
-        for (Spark spark : sparkList){
-            System.out.println("De spark is:" + spark.getSparkName());
 
-            for(Sensor sensor : spark.getSensors()){
-               System.out.println("Dit is een sensor van deze spark"+ sensor.getSensorName()+ sensor.getSensorID());
-               for(SensorData sensorData : sensor.getSensorDataList()) {
-                     System.out.println(sensorData.getDataID().toString());
-               }
+            for (Sensor sensor : spark.getSensors()) {
+                System.out.println("Dit is een sensor van deze spark" + sensor.getSensorName() + sensor.getSensorID());
+
+
+                for (SensorData sensorData : sensor.getSensorDataList()) {
+
+                }
+
             }
-        }
 
-        return null;
+        }
+        for (Spark spark : sparkList) {
+            System.out.println("De spark is:" + spark.getSparkName() + spark.getSparkID());
+
+            for (Sensor sensor : spark.getSensors()) {
+                System.out.println("Dit is een sensor van deze spark" + sensor.getSensorName() + sensor.getSensorID());
+
+
+                for (SensorData sensorData : sensor.getSensorDataList()) {
+                    System.out.println(sensorData.getSensor().getSensorID().toString() + sensor.getSensorID().toString());
+
+                }
+
+            }
+
+        }
     }
+
 }
 
 

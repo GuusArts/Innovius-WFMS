@@ -8,11 +8,13 @@ import java.time.LocalDateTime;
 @Table(name = "sensorData")
 public class SensorData {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "DataID")
     private Long dataID;
 
-    @Column(name="SensorID")
-    private Long sensorID;
+    @ManyToOne
+    @JoinColumn(name = "SensorId")
+    private Sensor sensor;
+
     @Column(name="timestamp")
     private LocalDateTime timestamp;
     @Column(name="Value")
@@ -25,9 +27,6 @@ public class SensorData {
     public void setValue(Double value) {
         this.value = value;
     }
-    @ManyToOne
-    @JoinColumn(name = "SensorId")
-    private Sensor sensor;
 
     public Sensor getSensor() {
         return sensor;
@@ -45,13 +44,6 @@ public class SensorData {
         this.dataID = dataID;
     }
 
-    public Long getSensorID() {
-        return sensorID;
-    }
-
-    public void setSensorID(Long sensorID) {
-        this.sensorID = sensorID;
-    }
 
     public LocalDateTime getTimestamp() {
         return timestamp;
