@@ -1,5 +1,6 @@
 package com.system.wfms.api;
 
+import com.system.wfms.DAL.SparkRepository;
 import com.system.wfms.Metrics.Spark;
 import com.system.wfms.service.MetricsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,13 +17,18 @@ public class MetricController {
     @Autowired
     private final MetricsService metricsService;
 
-    public MetricController(MetricsService metricsService) {
+    @Autowired
+    private final SparkRepository sparkRepository;
+
+    public MetricController(MetricsService metricsService, SparkRepository sparkRepository) {
         this.metricsService = metricsService;
+        this.sparkRepository = sparkRepository;
     }
 
     @GetMapping("List/Sparks")
     public List<Spark> GetAvaibleMetrics(){
-       return null;
+        System.out.println(sparkRepository.findAll().size());
+       return sparkRepository.findAll();
     }
 
 

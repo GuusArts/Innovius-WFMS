@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
 @Table(name = "Winetanks")
 @Data
 @Entity
@@ -12,55 +11,50 @@ import lombok.NoArgsConstructor;
 public class WineTank {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
     @Column(name = "name")
     private String name;
+
     @Column(name = "volume")
     private Double volume;
 
     @Column(name = "WineCategory")
-
     private String wineCategory;
 
     @Column(name = "variety")
     private String variety;
 
-    @Column(name = "temperature")
-    private Double temperature;
+    @Column(name = "SparkID")
+    private Integer sparkID;
 
+    @Column(name = "WineroomID")
+    private Long WineroomID;
 
-    @ManyToOne
-    @JoinColumn(name="wineroom_id")
-    private WineRoom wineRoom;
-    @Column(name = "ActuatorOn")
-    private Boolean tempActuatorON;
+    public Integer getSparkID() {
+        return sparkID;
+    }
 
+    public void setSparkID(Integer sparkID) {
+        this.sparkID = sparkID;
+    }
 
+    public Long getWineroomID() {
+        return WineroomID;
+    }
 
+    public void setWineroomID(Long wineroomID) {
+        this.WineroomID = wineroomID;
+    }
 
     public String getVariety() {
         return variety;
     }
 
-
-
-    public WineTank(Long id, String name, Double volume, String wineCategory, String variety, Double temperature, Boolean tempActuatorON, WineRoom wineRoom) {
-        this.id = id;
-        this.name = name;
-        this.volume = volume;
-        this.wineCategory = wineCategory;
-        this.variety = variety;
-        this.temperature = temperature;
-        this.tempActuatorON = tempActuatorON;
-        this.wineRoom = wineRoom;
-    }
-
     public void setVariety(String variety) {
         this.variety = variety;
     }
-
 
     public String getWineCategory() {
         return wineCategory;
@@ -70,14 +64,12 @@ public class WineTank {
         this.wineCategory = wineCategory;
     }
 
-
-
-    public Long getiD() {
+    public Long getId() {
         return id;
     }
 
-    public void setiD(Long iD) {
-        this.id = iD;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {

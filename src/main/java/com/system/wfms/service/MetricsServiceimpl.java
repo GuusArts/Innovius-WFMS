@@ -53,7 +53,7 @@ public class MetricsServiceimpl implements MetricsService {
         JsonElement jsonElement = JsonParser.parseString(jsonData);
 
         if (jsonElement.isJsonArray()) {
-            handleJsonArray(jsonElement.getAsJsonArray());
+            handleJsonArray(jsonElement.getAsJsonArray())                      ;
         } else if (jsonElement.isJsonObject()) {
             ConvertJsonToSparkMetric(jsonElement.getAsJsonObject());
         } else {

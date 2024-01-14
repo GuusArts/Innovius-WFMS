@@ -2,7 +2,9 @@ package com.system.wfms.api;
 
 
 import com.system.wfms.DAL.WineRoomRepository;
+import com.system.wfms.DAL.WineTankRepository;
 import com.system.wfms.Models.WineRoom;
+import com.system.wfms.Models.WineTank;
 import com.system.wfms.service.WineTankService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,16 +17,19 @@ import java.util.List;
 
 @RestController
 @CrossOrigin (origins= {"http://localhost:8080","http://localhost:5000"})
-@RequestMapping("/monitor")
-public class WineRoomController {
+
+public class WineHouseController {
 
     @Autowired
     private final WineTankService wineTankService;
 
     @Autowired
     WineRoomRepository wineRoomRepository;
+    @Autowired
+    WineTankRepository wineTankRepository;
 
-    public WineRoomController(WineTankService wineTankService) {
+
+    public WineHouseController(WineTankService wineTankService) {
         this.wineTankService = wineTankService;
     }
 
@@ -34,14 +39,21 @@ public class WineRoomController {
        wineRoomRepository.save(wineRoom);
        return ResponseEntity.ok().body(wineRoom);
     }
-    @GetMapping("/winerooms")
-    public ResponseEntity<List<WineRoom>> RetrieveWineRooms() throws Exception {
+    @GetMapping("/List/Wineroom")
+    public List<WineRoom> RetrieveWineRooms() throws Exception {
         if(!wineRoomRepository.findAll().isEmpty()) {
             System.out.println(wineRoomRepository.findAll().size());
-            return ResponseEntity.ok().body(wineRoomRepository.findAll());
+            return wineRoomRepository.findAll();
         }
-            return ResponseEntity.ok(Collections.emptyList());
+            return Collections.emptyList();
 
+
+    }
+
+    @PostMapping("/create/wineTank")
+    public void CreatWineTank(@RequestBody @Valid WineTank wineTank){
+        System.out.println("Winetank" + wineTank.getName() + wineTank.getWineroomID() + wineTank.getWineCategory() + wineTank.getSparkID());
+        wineTankRepository.save(wineTank);
 
     }
 
