@@ -82,6 +82,10 @@ public class WineTankServiceImpl implements WineTankService {
         return null;
     }
 
+    public List<WineTank> getWineTanksByWineRoomId(Long wineRoomId) {
+        return wineTankRepository.findByWineroomID(wineRoomId);
+    }
+
     public void SendWineTankToDb(WineTank winetank){
         wineTankRepository.save(winetank);
     }
